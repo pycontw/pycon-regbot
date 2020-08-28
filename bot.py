@@ -26,7 +26,7 @@ hello_help = "Just to say hello, nothing special."
 token_dict = import_all_token()
 used_list = read_used_list()
 
-help_command = commands.help.DefaultHelpCommand(no_category="The commands I am listening")
+help_command = commands.help.DefaultHelpCommand(no_category="The commands I am listening on #registration-desk")
 bot = commands.Bot(command_prefix='!', description=HELP_DESCRIPTION, help_command=help_command)
 
 def get_roles_from_ticket_type(roles, ticket_type: str):
@@ -44,7 +44,8 @@ def get_roles_from_ticket_type(roles, ticket_type: str):
 async def on_ready():
     listening_activity = discord.Activity(type=discord.ActivityType.listening, name="!register")
     await bot.change_presence(activity=listening_activity)
-    print('Registration bot is ready.')
+    print(f'Registration bot is ready. Token count: {len(token_dict)}')
+    logging.info(f"Token count: {len(token_dict)}")
     logging.info('Registration bot is ready.')
 
 
@@ -54,7 +55,7 @@ async def on_ready():
 @bot.command(brief=register_brief, help=register_help)
 async def register(ctx, *, TOKEN=None):
     name = ctx.message.author.display_name
-    if ctx.message.channel.type == "dm" or str(ctx.message.channel) != "test-registration-desk":
+    if ctx.message.channel.type == discord.ChannelType.private or str(ctx.message.channel) != "registration-desk":
         return
 
     input_token = TOKEN
@@ -67,7 +68,6 @@ async def register(ctx, *, TOKEN=None):
         await ctx.send(f"Sorry {name}, your token has already been used. Please ask @2020-staff for help.")
         logging.info(f"{name} has token that already been used: {input_token}")
     else:
-        # TODO: logging: register successfully
         given_role = get_roles_from_ticket_type(ctx.message.guild.roles, token_dict[input_token])
         print(f'Giving {name} the role {given_role}')
         await ctx.message.author.add_roles(given_role)
@@ -79,6 +79,8 @@ async def register(ctx, *, TOKEN=None):
 
 @bot.command(brief=hello_brief, help=hello_help)
 async def hello(ctx, *, message=None):
+    if ctx.message.channel.type == discord.ChannelType.private:
+        return
     name = ctx.message.author.display_name
     print(f"Receive Hello from {name}!")
     print(used_list)

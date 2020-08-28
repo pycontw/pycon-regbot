@@ -14,20 +14,25 @@ def import_all_token():
     # Corporate Ticket
     with open(CORPORATE_FILE, newline='') as f:
         rows = csv.reader(f)
-        for ticket_type, token in rows:
-            token_dict[token] = ticket_type
+        for row in rows:
+            token = row[0]
+            if len(token) == 32:
+                token_dict[token] = "corporate"
 
     # Individual Ticket
     with open(INDIVIDUAL_FILE, newline='') as f:
         rows = csv.reader(f)
-        for ticket_type, token in rows:
-            token_dict[token] = ticket_type
+        for row in rows:
+            token = row[0]
+            if len(token) == 32:
+                token_dict[token] = "individual"
 
     # Reserved Ticket
     with open(RESERVED_FILE, newline='') as f:
         rows = csv.reader(f)
-        for ticket_type, token in rows:
-            token_dict[token] = ticket_type
+        for token, ticket_type in rows:
+            if len(token) == 32:
+                token_dict[token] = ticket_type
 
     return token_dict
 
