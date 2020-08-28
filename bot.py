@@ -1,8 +1,17 @@
 import os
+import logging
 import discord
 from discord.ext import commands, tasks
 from dotenv import load_dotenv
 from token_import import import_all_token, read_used_list
+
+# logging config
+logging.basicConfig(
+    filename=".log/reg.log",
+    format="%(asctime)s - %(message)s",
+    level=logging.INFO,
+    datefmt="%Y-%b-%d %H:%M:%S",
+)
 
 load_dotenv()
 BOT_TOKEN = os.getenv("BOT_TOKEN")
@@ -36,6 +45,7 @@ async def on_ready():
     listening_activity = discord.Activity(type=discord.ActivityType.listening, name="!register")
     await bot.change_presence(activity=listening_activity)
     print('Registration bot is ready.')
+    logging.info('Registration bot is ready.')
 
 
 # ---------------------------------------
@@ -52,10 +62,10 @@ async def register(ctx, *, TOKEN=None):
     await ctx.message.delete()
     if input_token not in token_dict.keys():
         await ctx.send(f"Sorry {name}, your token is invalid. Please try again, or ask @2020-staff for help.")
-        # TODO: logging: invalid token
+        logging.info(f"{name} has invalid token: {input_token}")
     elif input_token in used_list:
-        await ctx.send(f"Sorry {name}, your token is already used. Please ask @2020-staff for help.")
-        # TODO: logging: used token
+        await ctx.send(f"Sorry {name}, your token has already been used. Please ask @2020-staff for help.")
+        logging.info(f"{name} has token that already been used: {input_token}")
     else:
         # TODO: logging: register successfully
         given_role = get_roles_from_ticket_type(ctx.message.guild.roles, token_dict[input_token])
@@ -65,6 +75,7 @@ async def register(ctx, *, TOKEN=None):
         used_list.append(input_token)
         with open(USED_FILE, 'w+') as f:
             f.write(f"{input_token}\n")
+        logging.info(f"{name} used {input_token} to get {given_role} successfully")
 
 @bot.command(brief=hello_brief, help=hello_help)
 async def hello(ctx, *, message=None):
