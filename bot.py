@@ -2,11 +2,12 @@ import os
 import discord
 from discord.ext import commands, tasks
 from dotenv import load_dotenv
-from token_import import import_all_token
+from token_import import import_all_token, read_used_list
 
 load_dotenv()
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 HELP_DESCRIPTION = os.getenv("HELP_DESCRIPTION")
+USED_FILE = os.getenv("USED_FILE_PATH")
 
 register_brief = "Enter !register TOKEN to register yourself!"
 register_help = "Enter  !register TOKEN to register yourself, you should find your own TOKEN in letter or in OPass"
@@ -14,6 +15,7 @@ hello_brief = "Say hello to me!"
 hello_help = "Just to say hello, nothing special."
 
 token_dict = import_all_token()
+used_list = read_used_list()
 
 help_command = commands.help.DefaultHelpCommand(no_category="The commands I am listening")
 bot = commands.Bot(command_prefix='!', description=HELP_DESCRIPTION, help_command=help_command)
@@ -49,17 +51,26 @@ async def register(ctx, *, TOKEN=None):
     print(f"Token {input_token} received from {name}")
     await ctx.message.delete()
     if input_token not in token_dict.keys():
-        await ctx.send(f"Sorry {name}, your token is incorrect. Please try again, or ask @2020-staff for help.")
+        await ctx.send(f"Sorry {name}, your token is invalid. Please try again, or ask @2020-staff for help.")
+        # TODO: logging: invalid token
+    elif input_token in used_list:
+        await ctx.send(f"Sorry {name}, your token is already used. Please ask @2020-staff for help.")
+        # TODO: logging: used token
     else:
+        # TODO: logging: register successfully
         given_role = get_roles_from_ticket_type(ctx.message.guild.roles, token_dict[input_token])
         print(f'Giving {name} the role {given_role}')
         await ctx.message.author.add_roles(given_role)
         await ctx.send(f"{ctx.message.author.name} is successfully registered.")
+        used_list.append(input_token)
+        with open(USED_FILE, 'w+') as f:
+            f.write(f"{input_token}\n")
 
 @bot.command(brief=hello_brief, help=hello_help)
 async def hello(ctx, *, message=None):
     name = ctx.message.author.display_name
     print(f"Receive Hello from {name}!")
+    print(used_list)
     await ctx.send(f"Hello! {name}, you say {message if message else 'nothing'}")
 
 bot.run(BOT_TOKEN)
