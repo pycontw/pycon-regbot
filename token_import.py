@@ -3,6 +3,7 @@ import csv
 from dotenv import load_dotenv
 load_dotenv()
 
+# Defined in .env file
 CORPORATE_FILE = os.getenv("CORPORATE_FILE_PATH")
 INDIVIDUAL_FILE = os.getenv("INDIVIDUAL_FILE_PATH")
 RESERVED_FILE = os.getenv("RESERVED_FILE_PATH")

@@ -2,8 +2,9 @@ import os
 import logging
 import discord
 from discord.ext import commands, tasks
-from dotenv import load_dotenv
 from token_import import import_all_token, read_used_list
+from dotenv import load_dotenv
+load_dotenv()
 
 # logging config
 logging.basicConfig(
@@ -13,10 +14,13 @@ logging.basicConfig(
     datefmt="%Y-%b-%d %H:%M:%S",
 )
 
-load_dotenv()
+# Defined in .env file
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 HELP_DESCRIPTION = os.getenv("HELP_DESCRIPTION")
 USED_FILE = os.getenv("USED_FILE_PATH")
+STAFF_ROLE_NAME = os.getenv("STAFF_ROLE_NAME")
+SPEAKER_ROLE_NAME = os.getenv("SPEAKER_ROLE_NAME")
+ATTENDEE_ROLE_NAME = os.getenv("ATTENDEE_ROLE_NAME")
 
 register_brief = "Enter !register TOKEN to register yourself!"
 register_help = "Enter  !register TOKEN to register yourself, you should find your own TOKEN in letter or in OPass"
@@ -31,11 +35,11 @@ bot = commands.Bot(command_prefix='!', description=HELP_DESCRIPTION, help_comman
 
 def get_roles_from_ticket_type(roles, ticket_type: str):
     if "Contributor" in ticket_type:
-        return discord.utils.get(roles, name="2020-staff")
+        return discord.utils.get(roles, name=STAFF_ROLE_NAME)
     elif "Speaker" in ticket_type:
-        return discord.utils.get(roles, name="2020-speaker")
+        return discord.utils.get(roles, name=SPEAKER_ROLE_NAME)
     else:
-        return discord.utils.get(roles, name="2020-attendee")
+        return discord.utils.get(roles, name=ATTENDEE_ROLE_NAME)
 
 # ---------------------------------------
 # Bot Initialization
@@ -62,10 +66,10 @@ async def register(ctx, *, TOKEN=None):
     print(f"Token {input_token} received from {name}")
     await ctx.message.delete()
     if input_token not in token_dict.keys():
-        await ctx.send(f"Sorry {name}, your token is invalid. Please try again, or ask @2020-staff for help.")
+        await ctx.send(f"Sorry {name}, your token is invalid. Please try again, or ask @{STAFF_ROLE_NAME} for help.")
         logging.info(f"{name} has invalid token: {input_token}")
     elif input_token in used_list:
-        await ctx.send(f"Sorry {name}, your token has already been used. Please ask @2020-staff for help.")
+        await ctx.send(f"Sorry {name}, your token has already been used. Please ask @{STAFF_ROLE_NAME} for help.")
         logging.info(f"{name} has token that already been used: {input_token}")
     else:
         given_role = get_roles_from_ticket_type(ctx.message.guild.roles, token_dict[input_token])
