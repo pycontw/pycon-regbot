@@ -2,11 +2,11 @@
 
 ## Description
 This bot is developed for registration users on Discord Server during PyCon TW 2020.
-In `#registration-desk` channel, users can register themselves by sending `!register <TOKEN>`.
+In the direct message channel to RegBot, users can register themselves by sending `!register <TOKEN>`.
 User can use his/her own token to get the role he/she should get.
 
 ## Commands list
-* `!register <TOKEN>`: Registers a user
+* `!register <TOKEN>`: Register yourself with given token
 * `!help`: Shows the help message
 * `!hello <MESSAGE>`: Just say hello to bot.
 
