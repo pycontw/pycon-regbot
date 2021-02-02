@@ -16,6 +16,7 @@ logging.basicConfig(
 
 # Defined in .env file
 BOT_TOKEN = os.getenv("BOT_TOKEN")
+GUILD_ID = os.getenv("GUILD_ID")
 HELP_DESCRIPTION = os.getenv("HELP_DESCRIPTION")
 USED_FILE = os.getenv("USED_FILE_PATH")
 STAFF_ROLE_NAME = os.getenv("STAFF_ROLE_NAME")
@@ -23,14 +24,14 @@ SPEAKER_ROLE_NAME = os.getenv("SPEAKER_ROLE_NAME")
 ATTENDEE_ROLE_NAME = os.getenv("ATTENDEE_ROLE_NAME")
 
 register_brief = "Enter !register TOKEN to register yourself!"
-register_help = "Enter  !register TOKEN to register yourself, you should find your own TOKEN in letter or in OPass"
+register_help = "Enter !register TOKEN to register yourself, you should find your own TOKEN in letter or in OPass"
 hello_brief = "Say hello to me!"
 hello_help = "Just to say hello, nothing special."
 
 token_dict = import_all_token()
 used_list = read_used_list()
 
-help_command = commands.help.DefaultHelpCommand(no_category="The commands I am listening on #registration-desk")
+help_command = commands.help.DefaultHelpCommand(no_category="The commands I am listening")
 bot = commands.Bot(command_prefix='!', description=HELP_DESCRIPTION, help_command=help_command)
 
 def get_roles_from_ticket_type(roles, ticket_type: str):
@@ -58,13 +59,15 @@ async def on_ready():
 # ---------------------------------------
 @bot.command(brief=register_brief, help=register_help)
 async def register(ctx, *, TOKEN=None):
+    server = bot.get_guild(int(GUILD_ID))
+    print(server.name)
+
     name = ctx.message.author.display_name
-    if ctx.message.channel.type == discord.ChannelType.private or str(ctx.message.channel) != "registration-desk":
+    if ctx.message.channel.type != discord.ChannelType.private:
         return
 
     input_token = TOKEN
     print(f"Token {input_token} received from {name}")
-    await ctx.message.delete()
     if input_token not in token_dict.keys():
         await ctx.send(f"Sorry {name}, your token is invalid. Please try again, or ask @{STAFF_ROLE_NAME} for help.")
         logging.info(f"{name} has invalid token: {input_token}")
@@ -72,9 +75,10 @@ async def register(ctx, *, TOKEN=None):
         await ctx.send(f"Sorry {name}, your token has already been used. Please ask @{STAFF_ROLE_NAME} for help.")
         logging.info(f"{name} has token that already been used: {input_token}")
     else:
-        given_role = get_roles_from_ticket_type(ctx.message.guild.roles, token_dict[input_token])
+        given_role = get_roles_from_ticket_type(server.roles, token_dict[input_token])
+        member = await server.fetch_member(ctx.message.author.id)
         print(f'Giving {name} the role {given_role}')
-        await ctx.message.author.add_roles(given_role)
+        await member.add_roles(given_role)
         await ctx.send(f"{ctx.message.author.name} is successfully registered.")
         used_list.append(input_token)
         with open(USED_FILE, 'w+') as f:
@@ -83,11 +87,10 @@ async def register(ctx, *, TOKEN=None):
 
 @bot.command(brief=hello_brief, help=hello_help)
 async def hello(ctx, *, message=None):
-    if ctx.message.channel.type == discord.ChannelType.private:
+    if ctx.message.channel.type != discord.ChannelType.private:
         return
     name = ctx.message.author.display_name
     print(f"Receive Hello from {name}!")
-    print(used_list)
     await ctx.send(f"Hello! {name}, you say {message if message else 'nothing'}")
 
 bot.run(BOT_TOKEN)
