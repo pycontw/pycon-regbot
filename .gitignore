@@ -2,3 +2,4 @@
 .env
 tokens
 __pycache__
+*.csv
