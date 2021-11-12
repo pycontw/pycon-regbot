@@ -7,6 +7,32 @@ User can use his/her own token to get the role he/she should get.
 
 ## Development environment
 
+### Prerequisite
+
+| Name | Version |
+| --- | --- |
+| Python | 3.8 |
+| pipenv(Python module) | 2021.5.29 or up |
+
+### Environment setup
+
+0. Initialize environment variable
+
+```
+cp sample.env .env
+```
+1. Initialize Python environment
+
+```
+pipenv install --dev
+```
+
+2. Enter the environment and start developing
+
+```
+pipenv shell
+```
+
 ## Commands list
 * `!register <TOKEN>`: Register yourself with given token
 * `!help`: Shows the help message
