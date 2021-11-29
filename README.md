@@ -43,11 +43,10 @@ python3 bot.py
 Tokens should be stored under "tokens" folder.
 
 Because ticket has different types, there are three different CSV files
+to represent each ticket type:
 * `corporate.csv` for corporate tickets
 * `individual.csv` for individual tickets
 * `reserved.csv` for reserved tickets
-
-to represent each ticket type.
 
 Each token is stored with the following format:
 ```
