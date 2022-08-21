@@ -39,7 +39,30 @@ pipenv shell
 python3 bot.py
 ```
 
-### Tokens
+### QRcode Tokens
+
+#### How to Get These Tokens?
+
+```sql
+SELECT
+  REPLACE(JSON_EXTRACT(ATTENDEE_INFO, '$.qrcode'), '"', '') AS token
+FROM
+  `pycontw-225217.ods.ods_kktix_attendeeId_datetime`
+WHERE
+  (REFUNDED IS NULL
+    OR REFUNDED = FALSE)
+  AND NAME LIKE '%<year>%'  -- year param: 20xx of course
+  AND LOWER(NAME) LIKE '%<type>%';  -- type param: <corporate, individual, reserved>
+```
+
+format:
+
+```csv
+token,
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,
+```
+#### Where to Put These Tokens
+
 Tokens should be stored under "tokens" folder.
 
 Because ticket has different types, there are three different CSV files
