@@ -41,7 +41,7 @@ python3 bot.py
 
 ### QRcode Tokens
 
-#### How to Get These Tokens?
+#### How to Get Tokens for `corporate.csv` and `individual.csv`?
 
 ```sql
 SELECT
@@ -52,15 +52,7 @@ WHERE
   (REFUNDED IS NULL
     OR REFUNDED = FALSE)
   AND NAME LIKE '%<year>%'  -- year param: 20xx of course
-  AND LOWER(NAME) LIKE '%<type>%';  -- type param: <corporate, individual, reserved>
-```
-
-format:
-
-```csv
-token,
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,
-```
+  AND LOWER(NAME) LIKE '%<type>%';  -- type param: <corporate, individual>
 #### Where to Put These Tokens
 
 Tokens should be stored under "tokens" folder.
