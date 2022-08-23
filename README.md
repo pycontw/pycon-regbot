@@ -53,6 +53,37 @@ WHERE
     OR REFUNDED = FALSE)
   AND NAME LIKE '%<year>%'  -- year param: 20xx of course
   AND LOWER(NAME) LIKE '%<type>%';  -- type param: <corporate, individual>
+```
+
+format:
+
+```csv
+token,
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,
+```
+
+#### How to Get Tokens for `reserved.csv`?
+
+```sql
+SELECT
+  REPLACE(JSON_EXTRACT(ATTENDEE_INFO, '$.qrcode'), '"', '') AS token,
+  REPLACE(JSON_EXTRACT(ATTENDEE_INFO, '$.ticket_name'), '"', '') AS ticket_name
+FROM
+  `pycontw-225217.ods.ods_kktix_attendeeId_datetime`
+WHERE
+  (REFUNDED IS NULL
+    OR REFUNDED = FALSE)
+  AND NAME LIKE '%<year>%'  -- year param: 20xx of course
+  AND LOWER(NAME) LIKE '%reserved%';
+```
+
+format:
+
+```csv
+token,ticket_name
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,Speaker 講者票（with Pyckage）
+```
+
 #### Where to Put These Tokens
 
 Tokens should be stored under "tokens" folder.
