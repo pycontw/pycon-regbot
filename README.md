@@ -17,10 +17,13 @@ User can use his/her own token to get the role he/she should get.
 ### Environment setup
 
 0. Initialize environment variable
-
+Copy `sample.env` to `.env` 
 ```
 cp sample.env .env
 ```
+
+Then fill-in the environment variables value in `.env`
+
 1. Initialize Python environment
 
 ```
