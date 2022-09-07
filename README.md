@@ -41,6 +41,8 @@ python3 bot.py
 
 ### QRcode Tokens
 
+![./pics/bigquery.png](./pics/bigquery.png)
+
 #### How to Get Tokens for `corporate.csv` and `individual.csv`?
 
 ```sql
