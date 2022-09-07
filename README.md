@@ -1,7 +1,7 @@
 # PyCon TW Registration Bot
 
 ## Description
-This bot is developed for registration users on Discord Server during PyCon TW 2021.
+This bot is developed for registration users on Discord Server during PyCon TW conference.
 In the direct message channel to RegBot, users can register themselves by sending `!register <TOKEN>`.
 User can use his/her own token to get the role he/she should get.
 
@@ -17,10 +17,13 @@ User can use his/her own token to get the role he/she should get.
 ### Environment setup
 
 0. Initialize environment variable
-
+Copy `sample.env` to `.env` 
 ```
 cp sample.env .env
 ```
+
+Then fill-in the environment variables value in `.env`
+
 1. Initialize Python environment
 
 ```

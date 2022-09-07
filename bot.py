@@ -82,7 +82,7 @@ async def register(ctx, *, TOKEN=None):
         print(f'Giving {name} the role {given_role}')
         await member.add_roles(given_role)
         used_list.append(input_token)
-        with open(USED_FILE, 'w+') as f:
+        with open(USED_FILE, 'a') as f:
             f.write(f"{input_token}\n")
         logging.info(f"{name} used {input_token} to get {given_role} successfully")
         await ctx.send(embed=generate_register_successfully_embed(given_role))
