@@ -34,7 +34,7 @@ help_description = "您需要幫助嗎? Do you need help?"
 token_dict = import_all_token()
 used_list = read_used_list()
 
-help_command = commands.help.DefaultHelpCommand(no_category="我的指令列表 The commands I am listening")
+help_command = commands.DefaultHelpCommand(no_category="我的指令列表 The commands I am listening")
 bot = commands.Bot(command_prefix='!', description=help_description, help_command=help_command)
 
 def get_roles_from_ticket_type(roles, ticket_type: str):
