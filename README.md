@@ -91,7 +91,11 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,Speaker 講者票（with Pyckage）
 
 #### Where to Put These Tokens
 
-Tokens should be stored under "tokens" folder.
+1. Go to the prod server we deploy pycon-regbot
+`$ gcloud beta compute ssh --zone "asia-east1-b" "pycontw-website" --project "pycontw-225217"`
+2. Change directory to `/home/jordan/pycon-regbot`, and you should put token files here.
+`$ cd /home/jordan/pycon-regbot`
+
 
 Because ticket has different types, there are three different CSV files
 to represent each ticket type:
