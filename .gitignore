@@ -3,3 +3,5 @@
 tokens
 __pycache__
 *.csv
+service-account.json
+venv

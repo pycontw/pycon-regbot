@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 "discord.py" = "==1.7.3"
 python-dotenv = "==0.19.2"
+google-cloud-bigquery = "*"
 
 [dev-packages]
 

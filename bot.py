@@ -38,9 +38,9 @@ help_command = commands.help.DefaultHelpCommand(no_category="我的指令列表 
 bot = commands.Bot(command_prefix='!', description=help_description, help_command=help_command)
 
 def get_roles_from_ticket_type(roles, ticket_type: str):
-    if "Contributor" in ticket_type:
+    if "contributor" in ticket_type:
         return discord.utils.get(roles, name=STAFF_ROLE_NAME)
-    elif "Speaker" in ticket_type:
+    elif "speaker" in ticket_type:
         return discord.utils.get(roles, name=SPEAKER_ROLE_NAME)
     else:
         return discord.utils.get(roles, name=ATTENDEE_ROLE_NAME)
